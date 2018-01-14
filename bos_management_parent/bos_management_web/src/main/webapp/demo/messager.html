@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 导入jquery核心类库 -->
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<!-- 导入easyui类库 -->
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+<!-- 导入默认主题CSS文件 -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css"/>
+<!--  导入图标CSS文件 -->
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css"/>
+<!--  导入国际化信息文件 -->
+<script src="../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("#alertBtn").click(function(){
+// 		alert('提示');
+//       $.messager.alert('提示',"这是一个alert提示");
+//       $.messager.alert('提示',"这是一个alert提示","info");
+//       $.messager.alert('提示',"这是一个alert提示","warning");
+      $.messager.alert('提示',"这是一个alert提示","error");
+	})
+	$("#confirmBtn").click(function(){
+      $.messager.confirm("是否删除","是否真的要删除数据",function(r){
+    	  if(r){
+    		  alert("执行了删除的操作");
+    	  }
+    	  
+      });
+	})
+	
+	$.messager.show({
+		title:'标题',
+		msg:'这是具体的内容',
+		timeout:2000,
+		showType:'slide'
+	})
+	
+})
+
+</script>
+</head>
+<body>
+ <button id="alertBtn">alert点击</button>
+ <button id="confirmBtn">confirm点击</button>
+</body>
+</html>

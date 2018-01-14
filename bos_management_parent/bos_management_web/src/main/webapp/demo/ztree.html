@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 导入jquery核心类库 -->
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<!-- 导入easyui类库 -->
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+<!-- 导入默认主题CSS文件 -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css"/>
+<!--  导入图标CSS文件 -->
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css"/>
+
+<link rel="stylesheet" type="text/css" href="../js/ztree/zTreeStyle.css"/>
+<!--  导入国际化信息文件 -->
+<script src="../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+<script type="text/javascript">
+ function reload(){
+	 
+	 alert('reload方法');
+ }
+ var ztreeObj;
+ var setting={
+		 data:{
+			 simpleData:{
+				 enable:true
+			 }
+		 },
+		 callback: {
+				onClick: function(event,treeId,node){
+// 					{ "id":"11", "pId":"0", "name":"基础数据"},
+// 					如果点击的是基础数据
+                    if(node.page==undefined){
+                    	return;
+                    }
+// 					node = { "id":"112", "pId":"11", "name":"收派标准",  "page":"pages/base/standard.html"},
+					var exists = $("#mytabs").tabs('exists',node.name);
+					if(exists){
+						$("#mytabs").tabs('select',node.name);
+					}else{
+						$("#mytabs").tabs('add',{
+							title:node.name,
+							content:"<iframe src='../"+node.page+"'  scrolling='no' style='height:100%;width:100%'></iframe>",
+						    closable:true,
+						    tools:[
+						           {
+						        	   iconCls:'icon-reload',
+						        	   handler:function(){
+						        		   alert("重新加载数据");
+//                                           	$("#grid").datagrid('reload');
+						        	   }
+						           }
+						           ]
+						});
+						
+					}
+				}
+		 }
+ };
+//  标准的数据格式   children
+//  var ztreeNodes=[{"name":"网站导航", open:true, children: [
+//                                            			{ "name":"google", "url":"http://g.cn", "target":"_blank"},
+//                                         			{ "name":"baidu", "url":"http://baidu.com", "target":"_blank"},
+//                                         			{ "name":"sina", "url":"http://www.sina.com.cn", "target":"_blank"}
+//                                         			]
+//                   }]
+
+// 简单json数据格式
+ var ztreeNodes=[{"id":1,"name":"网站导航", open:true},
+                 {"id":11,"pId":1,"name":"google", "url":"http://g.cn", "target":"_blank"},
+                 {"id":12,"pId":1, "name":"baidu", "url":"http://baidu.com", "target":"_blank"},
+                 {"id":13,"pId":1, "name":"sina", "url":"http://www.sina.com.cn", "target":"_blank"}
+                 ]
+ 
+ 
+ 
+ $(function(){
+	 
+	 $.post("../data/menu.json",function(data){
+	 	 ztreeObj = $.fn.zTree.init($("#mytree"), setting, data);
+	 },'json')
+	 
+// 	 ztreeObj = $.fn.zTree.init($("#mytree"), setting, ztreeNodes);
+
+	 
+	 $("#addBtn").click(function(){
+// 		 动态添加选项卡
+//  判断tabs中是否已存在
+   var exists = $("#mytabs").tabs('exists','面板三');
+    if(exists){
+    //  如果已存在，选中效果
+    	 $("#mytabs").tabs('select','面板三');
+    }
+    else{
+    //  如果不存在添加
+        $("#mytabs").tabs("add",{
+        	title:'面板三',
+        	content:"<iframe src='http://www.baidu.com'  scrolling='no' style='height:100%;width:100%'></iframe>",
+        	closable:true
+        })
+    }
+})
+
+
+	 
+ })
+
+</script>
+
+</head>
+<body class="easyui-layout">
+<!--  <div  style="width: 100%;height: 100% "> -->
+  <div title="北部区域" data-options="region:'north'" style="height: 100px"></div>
+  <div title="西部区域" data-options="region:'west'" style="width: 200px">
+     <div class="easyui-accordion"  data-options="fit:true" >
+      <div title="面板一">
+          <ul id="mytree" class="ztree"></ul>
+      </div>
+      <div title="面板二">面板二的内容</div>
+     </div>
+  </div>
+  <div title="中部区域" data-options="region:'center'">
+    <div class="easyui-tabs" id="mytabs"  data-options="fit:true" >
+      <div title="面板一" data-options="closable:true,tools:[{iconCls:'icon-reload',handler:reload}]">面板一的内容</div>
+      <div title="面板二">面板二的内容</div>
+     </div>
+  </div>
+  <div title="东部区域" data-options="region:'east'" style="width: 200px"></div>
+  <div title="南部区域" data-options="region:'south'"  style="height: 50px"></div>
+<!--  </div> -->
+</body>
+</html>
